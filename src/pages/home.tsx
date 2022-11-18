@@ -46,6 +46,7 @@ function Home() {
 
     const [data, setData] = React.useState<AgendaProps[]>([]);
     const [modal, setModal] = useState<boolean>(false);
+    const ref = useRef<HTMLInputElement>(null)
 
     const handleClose = () => {
         setModal(s => !s);
@@ -69,6 +70,23 @@ function Home() {
 
         setData([...data])
     }
+
+
+    const exportFile = useCallback(() => {
+        const ws = utils.json_to_sheet(data);
+        const wb = utils.book_new();
+        utils.book_append_sheet(wb, ws, "Data");
+        writeFileXLSX(wb, "agenda.xlsx");
+    }, [data]);
+
+    const handleToggle = (dataInput: AgendaProps) => {
+
+        const index = data.indexOf(dataInput);
+
+        data[index] = { ...dataInput, status: !dataInput.status };
+        setData([...data])
+    }
+
 
     const {
         register,
@@ -123,6 +141,7 @@ function Home() {
 
 
         columnHelper.accessor((row) => <> <input type="checkbox" name={data.indexOf(row).toString()} defaultChecked={row.status} checked={row.status} onChange={(value) => {
+            handleToggle(row)
         }} /> </>, {
             id: 'status',
             header: () => "Status",
@@ -160,11 +179,27 @@ function Home() {
 
                 <ButtonSubmit onClick={handleClose}> <div className="flex items-center space-x-5"> <PlusCircleFill /> <div>Add Task </div>  </div></ButtonSubmit>
                 <div className="flex space-x-10">
+                    <input type="file" ref={ref} style={{ "display": "none" }} accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet ,.csv" onChange={async (e) => {
+                        if (e.target.files != null) {
+                            const file = e.target.files![0];
+                            const f = await file.arrayBuffer();
+                            const wb = read(f);
+                            const ws = wb.Sheets[wb.SheetNames[0]];
+                            const dataCreate = utils.sheet_to_json(ws);
+                            setData([...data, ...dataCreate as AgendaProps[]]);
+                            console.log(data);
+                        } else {
+                            toast("select valid file")
+                        }
+                    }} />
+
 
                     <ButtonSubmit onClick={() => {
+                        ref.current?.click()
                     }} className="bg-gray-800"> <div className="flex items-center space-x-5"> <CloudUploadFill /> <div>Import Tasks </div>  </div></ButtonSubmit>
 
                     <ButtonSubmit onClick={() => {
+                        exportFile()
                     }} className="bg-blue-800"> <div className="flex items-center space-x-5"> <Download /> <div>Download Tasks </div>  </div></ButtonSubmit>
 
                 </div>
