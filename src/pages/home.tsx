@@ -52,6 +52,23 @@ function Home() {
     }
 
 
+    const handleDelete = (dataInput: AgendaProps) => {
+
+        const index = data.indexOf(dataInput);
+
+        const x = data.splice(index, 1);
+
+        setData([...data])
+    }
+
+    const handleUpdate = (inputData: AgendaProps) => {
+
+        let index = data.findIndex((va) => va.id === inputData.id)
+
+        data[index] = inputData;
+
+        setData([...data])
+    }
 
     const {
         register,
@@ -111,7 +128,7 @@ function Home() {
             header: () => "Status",
             cell: info => info.getValue(),
         }),
-        columnHelper.accessor((row) => <Actions data={row} handleUpdate={() => { }} handleDelete={() => { }} />, {
+        columnHelper.accessor((row) => <Actions data={row} handleUpdate={handleUpdate} handleDelete={handleDelete} />, {
             id: 'actions',
             header: () => "actions",
             cell: info => info.getValue(),
