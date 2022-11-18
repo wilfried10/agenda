@@ -9,12 +9,15 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@hookform/resolvers": "^2.9.10",
+    "@tanstack/react-table": "^8.5.30",
     "react": "^18.2.0",
     "react-bootstrap-icons": "^1.9.1",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.4.3",
     "react-toastify": "^9.1.1",
     "spinners-react": "^1.0.7",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.19.1/xlsx-0.19.1.tgz",
     "yup": "^0.32.11"
   },
   "devDependencies": {
