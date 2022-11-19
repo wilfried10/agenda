@@ -19,11 +19,6 @@ import { read, utils, writeFileXLSX } from 'xlsx';
 
 
 
-
-
-
-
-
 const schema = yup
     .object({
         title: yup.string().required(),
@@ -34,16 +29,7 @@ const schema = yup
     })
     .required();
 
-
-
-
-
-
 function Home() {
-
-
-
-
     const [data, setData] = React.useState<AgendaProps[]>([]);
     const [modal, setModal] = useState<boolean>(false);
     const ref = useRef<HTMLInputElement>(null)
@@ -54,20 +40,14 @@ function Home() {
 
 
     const handleDelete = (dataInput: AgendaProps) => {
-
         const index = data.indexOf(dataInput);
-
         const x = data.splice(index, 1);
-
         setData([...data])
     }
 
     const handleUpdate = (inputData: AgendaProps) => {
-
         let index = data.findIndex((va) => va.id === inputData.id)
-
         data[index] = inputData;
-
         setData([...data])
     }
 
@@ -80,9 +60,7 @@ function Home() {
     }, [data]);
 
     const handleToggle = (dataInput: AgendaProps) => {
-
         const index = data.indexOf(dataInput);
-
         data[index] = { ...dataInput, status: !dataInput.status };
         setData([...data])
     }
@@ -95,27 +73,20 @@ function Home() {
         formState: { errors, isSubmitting },
     } = useForm<AgendaProps>({
         resolver: yupResolver(schema),
-
         mode: "onTouched",
     });
 
 
     const onSubmit = async (inputData: AgendaProps) => {
-
-
         console.log(data);
         setData([{ ...inputData, status: false }, ...data,]);
         setModal(false);
         reset()
     };
 
-
-
     const columnHelper = createColumnHelper<AgendaProps>();
 
     const columns = [
-
-
         columnHelper.accessor("title", {
             header: () => "Titre",
             cell: info => info.getValue(),
@@ -155,28 +126,17 @@ function Home() {
 
     ]
 
-
-
     const table = useReactTable({
         data,
         columns,
         getCoreRowModel: getCoreRowModel(),
     })
 
-
-
-
-
-
-
     return (
         <>
 
             <div className="text-center p-3 flex items-center justify-center font-semibold mb-8 text-xl"><div>Agenda  </div>  </div>
-
-
             <div className="mb-4 flex justify-between ">
-
                 <ButtonSubmit onClick={handleClose}> <div className="flex items-center space-x-5"> <PlusCircleFill /> <div>Add Task </div>  </div></ButtonSubmit>
                 <div className="flex space-x-10">
                     <input type="file" ref={ref} style={{ "display": "none" }} accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet ,.csv" onChange={async (e) => {
@@ -242,10 +202,7 @@ function Home() {
                             </tr>
                         ))}
                     </tbody>
-
                 </table>
-
-
             }
 
             {modal && <Modal onClick={handleClose} isBig={true}>
@@ -324,11 +281,7 @@ const Actions: React.FC<{ data: AgendaProps, handleUpdate: Function, handleDelet
 
     const handleDeleteClose = () => {
         setDeleteModal(s => !s)
-
     }
-
-
-
 
     const {
         register,
@@ -341,25 +294,15 @@ const Actions: React.FC<{ data: AgendaProps, handleUpdate: Function, handleDelet
         defaultValues: data
     });
 
-
     const onSubmit = async (inputData: AgendaProps) => {
-
 
         if (loader) return;
         console.log(data);
-
         setLoader(true);
-
-
-
         setLoader(false);
-
         setModal(false);
         reset()
         handleUpdate(inputData)
-
-
-
     };
 
 
@@ -369,7 +312,6 @@ const Actions: React.FC<{ data: AgendaProps, handleUpdate: Function, handleDelet
         <PencilFill className="text-red-900" onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-
             handleClose()
         }} />
         <TrashFill className="text-red-900" onClick={(e) => {
@@ -379,14 +321,10 @@ const Actions: React.FC<{ data: AgendaProps, handleUpdate: Function, handleDelet
 
         }} />
 
-
-
         {modal && <Modal onClick={handleClose} isBig={true}>
             <div className='space-y-5 min-h-[30vh] min-w-[40vh] flex items-center justify-center'>
                 <form onSubmit={handleSubmit(onSubmit)}>
-
                     <div className="text-center p-3 flex items-center justify-center font-semibold mb-8 text-xl"> Update Task   </div>
-
                     <Input type="text" {...register("title")} >
                         Title
                     </Input>
@@ -395,8 +333,6 @@ const Actions: React.FC<{ data: AgendaProps, handleUpdate: Function, handleDelet
                             {errors.title.message}
                         </span>
                     )}
-
-
                     <TextArea  {...register("description")}  >
                         Description
                     </TextArea>
@@ -423,8 +359,6 @@ const Actions: React.FC<{ data: AgendaProps, handleUpdate: Function, handleDelet
                             {errors.time.message}
                         </span>
                     )}
-
-
                     <div className='flex justify-center items-center mt-10'>  <ButtonSubmit isForm={true} isLoading={loader}> Update</ButtonSubmit></div>
                 </form>
 
@@ -446,16 +380,11 @@ const Actions: React.FC<{ data: AgendaProps, handleUpdate: Function, handleDelet
                     }}>  <span className="text-white">Cancel </span></ButtonSubmit>
 
                     <ButtonSubmit isForm={false} isLoading={lastDelete} onClick={async () => {
-
-
                         setLastDelete(true);
-
                         setModal(false);
                         reset()
                         handleDelete(data)
-
                         setLastDelete(false);
-
                     }}> <span className="text-white"> Delete</span></ButtonSubmit>
 
                 </div>
